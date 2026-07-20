@@ -1,6 +1,6 @@
 # Oh My Proxy
 
-Fully local proxy control for Chrome and Firefox.
+I got tired of proxy extensions that were too limited or too complicated, so I built my own.
 
 <img src="images/image.png" alt="Proxy popup" width="300">
 
@@ -11,6 +11,7 @@ Fully local proxy control for Chrome and Firefox.
 - Manage HTTP, HTTPS, and SOCKS5 proxies.
 - Turn the selected proxy on or off from the popup.
 - Check proxy reachability and response time.
+- Route sites directly, through a proxy, or block them.
 - Switch proxies with keyboard shortcuts.
 
 ## Limitations
