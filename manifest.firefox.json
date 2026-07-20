@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Oh My Proxy",
-  "description": "I got tired of proxy extensions that were too limited or too complicated, so I built my own.",
+  "description": "Simple, but everything you need.",
   "version": "0.3.0",
   "permissions": [
     "proxy",
