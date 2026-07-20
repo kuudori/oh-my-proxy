@@ -1,0 +1,6 @@
+.claude
+.DS_Store
+dist/
+*.zip
+*.xpi
+.omp

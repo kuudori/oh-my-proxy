@@ -1,0 +1,61 @@
+{
+  "manifest_version": 2,
+  "name": "Oh My Proxy",
+  "description": "I got tired of proxy extensions that were too limited or too complicated, so I built my own.",
+  "version": "0.3.0",
+  "permissions": [
+    "proxy",
+    "storage",
+    "webRequest",
+    "webRequestBlocking",
+    "<all_urls>"
+  ],
+  "background": {
+    "scripts": [
+      "shared.js",
+      "routing.js",
+      "check-fetch.js",
+      "platform-firefox.js",
+      "background.js"
+    ],
+    "persistent": true
+  },
+  "browser_action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
+  "commands": {
+    "toggle-proxy": { "description": "Toggle proxy" },
+    "next-proxy": { "description": "Next proxy" },
+    "prev-proxy": { "description": "Previous proxy" }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "oh-my-proxy@local.dev",
+      "data_collection_permissions": {
+        "required": [
+          "authenticationInfo",
+          "personallyIdentifyingInfo",
+          "websiteActivity",
+          "websiteContent"
+        ]
+      },
+      "strict_min_version": "115.0"
+    }
+  }
+}

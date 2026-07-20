@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Oh My Proxy Settings</title>
+    <link rel="stylesheet" href="../theme.css" />
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main>
+      <h1 class="page-title">Oh My Proxy</h1>
+
+      <section class="card proxy-card">
+        <div id="proxy-list"></div>
+
+        <form id="add-form" class="add-row">
+          <label class="sr-only" for="proxy-input">Proxy</label>
+          <textarea
+            id="proxy-input"
+            rows="1"
+            placeholder="One proxy per line"
+            autocomplete="off"
+            required
+          ></textarea>
+          <label class="sr-only" for="scheme">Proxy type</label>
+          <select id="scheme">
+            <option value="http" selected>HTTP</option>
+            <option value="https">HTTPS</option>
+            <option value="socks5">SOCKS5</option>
+          </select>
+          <button type="button" id="cancel-edit" hidden>Cancel</button>
+          <button type="submit" id="submit-btn" class="primary">Add</button>
+        </form>
+        <div class="add-row edit-name-row" id="edit-name-row" hidden>
+          <label class="sr-only" for="label">Name</label>
+          <input id="label" placeholder="Name (optional)" autocomplete="off" />
+        </div>
+        <div class="add-foot">
+          <p class="hint">
+            Formats: <code>user:pass@host:port</code> or
+            <code>socks5://host:port</code>. A URL scheme overrides the selected type.
+          </p>
+          <span id="add-status" class="add-status"></span>
+        </div>
+        <p id="socks-warn" class="warn" hidden>
+          Chrome can't use SOCKS5 credentials. Use IP allowlisting or an HTTP proxy.
+        </p>
+      </section>
+
+
+      <section class="card">
+        <div class="card-head">
+          <h2>Routing rules</h2>
+          <label class="routing-default">
+            Default
+            <select id="routing-default">
+              <option value="proxy">Proxy</option>
+              <option value="direct">Direct</option>
+            </select>
+          </label>
+        </div>
+        <form id="routing-form" class="routing-add">
+          <input
+            id="routing-pattern"
+            placeholder="example.com or https://example.com/path*"
+            autocomplete="off"
+            required
+          />
+          <select id="routing-action" aria-label="Rule action">
+            <option value="direct">Direct</option>
+            <option value="proxy">Proxy</option>
+            <option value="block">Block</option>
+          </select>
+          <button type="button" id="routing-cancel" hidden>Cancel</button>
+          <button type="submit" id="routing-submit" class="primary">Add</button>
+        </form>
+        <span id="routing-status" class="add-status"></span>
+        <div id="routing-list"></div>
+        <p id="routing-empty" class="empty" hidden>No routing rules</p>
+        <p class="hint">
+          First match wins. Unmatched requests use the default. <code>&lt;local&gt;</code>
+          matches hostnames without dots, including <code>localhost</code>;
+          <code>127.0.0.1</code> is a separate loopback address.
+        </p>
+      </section>
+
+      <p class="shortcut-inline">
+        Configure hotkeys <a href="#" id="shortcut-link">here</a>.
+      </p>
+    </main>
+
+    <script src="../shared.js"></script>
+    <script src="options.js"></script>
+  </body>
+</html>

@@ -1,0 +1,43 @@
+/* Shared palette, dark mode, reset, and base font for all extension pages.
+   Page stylesheets define only their page-specific variables and rules. */
+
+:root {
+  --text: #1c1e21;
+  --text-2: rgba(28, 30, 33, 0.68);
+  --muted: rgba(28, 30, 33, 0.46);
+  --border: rgba(28, 30, 33, 0.09);
+  --hover: rgba(28, 30, 33, 0.05);
+  --green: #219653;
+  --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #e8eaed;
+    --text-2: rgba(232, 234, 237, 0.68);
+    --muted: rgba(232, 234, 237, 0.46);
+    --border: rgba(255, 255, 255, 0.09);
+    --hover: rgba(255, 255, 255, 0.06);
+    --green: #47ba77;
+  }
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--text);
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 50%;
+}
