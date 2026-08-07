@@ -6,7 +6,7 @@ import vm from 'node:vm';
 async function loadScripts(...files) {
   const context = vm.createContext({ URL, chrome: {} });
   for (const file of files) {
-    const source = await readFile(new URL(`../${file}`, import.meta.url), 'utf8');
+    const source = await readFile(new URL(`../src/${file}`, import.meta.url), 'utf8');
     vm.runInContext(source, context, { filename: file });
   }
   return context;

@@ -1,0 +1,92 @@
+name: Verify source and builds
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run tests
+        run: node --test tests/*.test.js
+
+      - name: Build Chrome artifact
+        run: ./build-chrome.sh
+
+      - name: Build Firefox artifact
+        run: ./build-firefox.sh
+
+      - name: Validate Chrome manifest
+        run: |
+          node -e "
+            const m = require('./dist/chrome/manifest.json');
+            if (m.manifest_version !== 3) throw new Error('expected MV3');
+            if (m.name !== 'Oh My Proxy') throw new Error('unexpected name: ' + m.name);
+            if (!m.background || !m.background.service_worker) throw new Error('missing service worker');
+            if (!m.icons || !m.icons['128']) throw new Error('missing 128px icon');
+          "
+
+      - name: Validate Firefox manifest
+        run: |
+          node -e "
+            const m = require('./dist/firefox/manifest.json');
+            if (m.manifest_version !== 2) throw new Error('expected MV2');
+            if (m.name !== 'Oh My Proxy') throw new Error('unexpected name: ' + m.name);
+          "
+
+      - name: Chrome and Firefox versions agree
+        run: |
+          node -e "
+            const a = require('./src/manifest.json').version;
+            const b = require('./src/manifest.firefox.json').version;
+            if (a !== b) throw new Error('version drift: chrome ' + a + ', firefox ' + b);
+          "
+
+      - name: Every file the Chrome package references exists
+        run: |
+          node -e "
+            const fs = require('fs'), path = require('path');
+            const root = 'dist/chrome';
+            const m = JSON.parse(fs.readFileSync(path.join(root, 'manifest.json')));
+            const missing = [];
+            const need = p => { if (!fs.existsSync(path.join(root, p))) missing.push(p); };
+
+            need(m.background.service_worker);
+            need(m.action.default_popup);
+            need(m.options_ui.page);
+            for (const p of Object.values(m.action.default_icon)) need(p);
+            for (const p of Object.values(m.icons)) need(p);
+
+            // Scripts and stylesheets pulled in by the extension pages.
+            for (const page of [m.action.default_popup, m.options_ui.page, 'offscreen.html']) {
+              const dir = path.dirname(page);
+              const html = fs.readFileSync(path.join(root, page), 'utf8');
+              for (const [, ref] of html.matchAll(/(?:src|href)=\"([^\"]+)\"/g)) {
+                if (/^(https?:|data:|#)/.test(ref)) continue;
+                need(path.normalize(path.join(dir, ref)));
+              }
+            }
+
+            // Loaded at runtime by name, so no static reference points at them.
+            ['shared.js', 'routing.js', 'platform-chrome.js', 'check-fetch.js', 'check-worker.js']
+              .forEach(need);
+
+            if (missing.length) throw new Error('missing from package:\n  ' + missing.join('\n  '));
+          "
+
+      - name: Chrome zip ships runtime files only
+        run: |
+          VERSION=$(node -p "require('./src/manifest.json').version")
+          ZIP="oh-my-proxy-$VERSION-chrome.zip"
+          test -f "$ZIP" || { echo "missing $ZIP" >&2; exit 1; }
+
+          # The hand-rolled zip this script replaced was a raw dump of the repo.
+          # Fail loudly if development files ever creep back in.
+          if unzip -Z1 "$ZIP" | grep -nEi '(^|/)(tests|preview|store|images|\.github|\.claude|\.omp|dist)/|\.DS_Store|(^|/)manifest\.firefox\.json$|(^|/)platform-firefox\.js$|(^|/)build-.*\.sh$|(^|/)README\.md$'; then
+            echo "Chrome zip contains files that must not ship (listed above)" >&2
+            exit 1
+          fi
+          echo "$ZIP: $(unzip -Z1 "$ZIP" | grep -c . ) entries, clean"

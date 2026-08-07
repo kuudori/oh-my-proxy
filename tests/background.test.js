@@ -49,7 +49,7 @@ async function loadChromeBackground(initial) {
   };
   const context = vm.createContext({ URL, TextEncoder, Uint8Array, crypto: webcrypto, chrome });
   for (const file of ['shared.js', 'routing.js', 'platform-chrome.js', 'background.js']) {
-    const source = await readFile(new URL(`../${file}`, import.meta.url), 'utf8');
+    const source = await readFile(new URL(`../src/${file}`, import.meta.url), 'utf8');
     vm.runInContext(source, context, { filename: file });
   }
   await vm.runInContext('writeQueue', context);

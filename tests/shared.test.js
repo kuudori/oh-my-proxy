@@ -5,7 +5,7 @@ import vm from 'node:vm';
 
 async function loadShared() {
   const context = vm.createContext({ URL, chrome: {} });
-  vm.runInContext(await readFile(new URL('../shared.js', import.meta.url), 'utf8'), context);
+  vm.runInContext(await readFile(new URL('../src/shared.js', import.meta.url), 'utf8'), context);
   return context;
 }
 

@@ -1,10 +1,12 @@
-# Oh My Proxy
+<p align="center">
+  <img src="store/tile.png" alt="Oh My Proxy" width="440">
+</p>
 
 I got tired of proxy extensions that were too limited or too complicated, so I built my own.
 
-<img src="images/image.png" alt="Proxy popup" width="300">
+<img src="store/screenshot-popup.png" alt="Proxy popup">
 
-<img src="images/settings.png" alt="Proxy settings" width="300">
+<img src="store/screenshot-options.png" alt="Proxy settings">
 
 ## What it can do
 
