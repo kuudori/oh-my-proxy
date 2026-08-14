@@ -2,6 +2,12 @@
   <img src="store/tile.png" alt="Oh My Proxy" width="440">
 </p>
 
+<p align="center">
+  <a href="https://chromewebstore.google.com/detail/oh-my-proxy/cnngfmoompgpeeickihllgpojenaocmp">
+    <img src="https://developer.chrome.com/static/docs/webstore/branding/image/tbyBjqi7Zu733AAKA5n4.png" alt="Available in the Chrome Web Store" width="206" height="58">
+  </a>
+</p>
+
 I got tired of proxy extensions that were too limited or too complicated, so I built my own.
 
 <img src="store/screenshot-popup.png" alt="Proxy popup">
