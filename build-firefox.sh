@@ -3,9 +3,13 @@
 set -e
 cd "$(dirname "$0")"
 
-OUT=dist/firefox
+VERSION=$(sed -n 's/.*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' src/manifest.firefox.json | head -1)
+[ -n "$VERSION" ] || { echo "could not read version from src/manifest.firefox.json" >&2; exit 1; }
 
-rm -rf "$OUT"
+OUT=dist/firefox
+ZIP=oh-my-proxy-$VERSION-firefox.zip
+
+rm -rf "$OUT" "$ZIP"
 mkdir -p "$OUT"
 
 # Ship everything in src/, then drop what Firefox does not use. The offscreen
@@ -20,5 +24,9 @@ mv "$OUT/manifest.firefox.json" "$OUT/manifest.json"
 find "$OUT" -name '*.svg' -delete
 find "$OUT" -name '.DS_Store' -delete
 
+# manifest.json must sit at the zip root, so zip from inside the build dir.
+(cd "$OUT" && zip -q -r -X "../../$ZIP" .)
+
 echo "Firefox build created: $OUT"
-echo "Load it in Firefox from $OUT/manifest.json"
+echo "Load it unpacked from $OUT/manifest.json"
+echo "Upload this to AMO: $ZIP"
